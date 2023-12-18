@@ -20,6 +20,21 @@ class Channel:
         self.video_count = channel['items'][0]['statistics']['videoCount']
         self.url = f"https://www.youtube.com/channel/{self.__channel_id}"
 
+    def __str__(self):
+        return f'{self.title} ({self.url})'
+
+    def __add__(self, other):
+        return int(self.subscriber_count) + int(other.subscriber_count)
+
+    def __sub__(self, other):
+        return int(self.subscriber_count) - int(other.subscriber_count)
+
+    def __lt__(self, other):
+        return int(self.subscriber_count) < int(other.subscriber_count)
+
+    def __le__(self, other):
+        return int(self.subscriber_count) <= int(other.subscriber_count)
+
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
         print(json.dumps(self.get_service().channels().list(id=self.__channel_id, part='snippet,statistics').execute(),
@@ -44,7 +59,3 @@ class Channel:
     @property
     def set_channel_id(self):
         return self.__channel_id
-
-    @set_channel_id.setter
-    def set_channel_id(self, data):
-        self.__channel_id = data
