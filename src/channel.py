@@ -7,11 +7,11 @@ from googleapiclient.discovery import build
 
 class Channel:
     """Класс для ютуб-канала"""
+    api_key = os.getenv('YT_API_KEY')
 
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         self.__channel_id = channel_id
-        self.api_key = os.getenv('YT_API_KEY')
         channel = self.get_service().channels().list(id=self.__channel_id, part='snippet,statistics').execute()
         self.title = channel['items'][0]['snippet']['title']
         self.view_count = channel['items'][0]['statistics']['viewCount']
@@ -37,8 +37,11 @@ class Channel:
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
-        print(json.dumps(self.get_service().channels().list(id=self.__channel_id, part='snippet,statistics').execute(),
-                         indent=2, ensure_ascii=False))
+        return self.printj()
+
+    def printj(self):
+        data = self.get_service().channels().list(id=self.__channel_id, part='snippet,statistics').execute()
+        print(json.dumps(data, indent=2, ensure_ascii=False))
 
     @classmethod
     def get_service(cls):
@@ -57,5 +60,5 @@ class Channel:
             json.dump(channel_data, file, indent=4, ensure_ascii=False)
 
     @property
-    def set_channel_id(self):
+    def channel_id(self):
         return self.__channel_id
