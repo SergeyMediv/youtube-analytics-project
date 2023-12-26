@@ -1,10 +1,9 @@
-from googleapiclient.discovery import build
-import os
 import json
 
+from src.apisettings import ApiSettings
 
-class Video:
-    api_key = os.getenv('YT_API_KEY')
+
+class Video(ApiSettings):
 
     def __init__(self, user_video_id):
         video_id = user_video_id
@@ -19,11 +18,6 @@ class Video:
 
     def __str__(self):
         return self.video_title
-
-    @classmethod
-    def get_service(cls):
-        you_tube = build('youtube', 'v3', developerKey=os.getenv('YT_API_KEY'))
-        return you_tube
 
     def printj(self):
         data = self.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails',
