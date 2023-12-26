@@ -1,18 +1,12 @@
 import json
-import os
 from datetime import timedelta
 
 import isodate
-from googleapiclient.discovery import build
+
+from src.apisettings import ApiSettings
 
 
-class PlayList:
-    api_key = os.getenv('YT_API_KEY')
-
-    @classmethod
-    def get_service(cls):
-        you_tube = build('youtube', 'v3', developerKey=os.getenv('YT_API_KEY'))
-        return you_tube
+class PlayList(ApiSettings):
 
     def __init__(self, playlist_id):
         self.playlist_id = playlist_id

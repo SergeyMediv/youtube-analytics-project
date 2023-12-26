@@ -4,10 +4,11 @@ import os
 # необходимо установить через: pip install google-api-python-client
 from googleapiclient.discovery import build
 
+from src.apisettings import ApiSettings
 
-class Channel:
+
+class Channel(ApiSettings):
     """Класс для ютуб-канала"""
-    api_key = os.getenv('YT_API_KEY')
 
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
@@ -42,11 +43,6 @@ class Channel:
     def printj(self):
         data = self.get_service().channels().list(id=self.__channel_id, part='snippet,statistics').execute()
         print(json.dumps(data, indent=2, ensure_ascii=False))
-
-    @classmethod
-    def get_service(cls):
-        you_tube = build('youtube', 'v3', developerKey=os.getenv('YT_API_KEY'))
-        return you_tube
 
     def to_json(self, filename):
         channel_data = {"channel_id": self.__channel_id,
