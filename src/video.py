@@ -6,18 +6,27 @@ from src.apisettings import ApiSettings
 class Video(ApiSettings):
 
     def __init__(self, user_video_id):
-        video_id = user_video_id
-        video_response = self.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails',
-                                                          id=video_id).execute()
         self.video_id = user_video_id
-        self.video_title: str = video_response['items'][0]['snippet']['title']
-        self.url = f"https://www.youtube.com/watch?v={self.video_id}"
-        self.view_count: int = video_response['items'][0]['statistics']['viewCount']
-        self.like_count: int = video_response['items'][0]['statistics']['likeCount']
-        self.comment_count: int = video_response['items'][0]['statistics']['commentCount']
+        video_response = self.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails',
+                                                          id=self.video_id).execute()
+        try:
+            video_response['items'][0]['snippet']['title']
+        except IndexError:
+            print('Bad Video ID')
+            self.title = None
+            self.url = None
+            self.view_count = None
+            self.like_count = None
+            self.comment_count = None
+        else:
+            self.title: str = video_response['items'][0]['snippet']['title']
+            self.url = f"https://www.youtube.com/watch?v={self.video_id}"
+            self.view_count: int = video_response['items'][0]['statistics']['viewCount']
+            self.like_count: int = video_response['items'][0]['statistics']['likeCount']
+            self.comment_count: int = video_response['items'][0]['statistics']['commentCount']
 
     def __str__(self):
-        return self.video_title
+        return self.title
 
     def printj(self):
         data = self.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails',
